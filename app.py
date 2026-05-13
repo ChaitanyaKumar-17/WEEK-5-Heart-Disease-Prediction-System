@@ -1,9 +1,11 @@
+import numpy as np
 from ucimlrepo import fetch_ucirepo 
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
   
 # fetch the Heart Disease dataset
 heart_disease = fetch_ucirepo(id=45) 
@@ -15,6 +17,7 @@ print(df.info())
 X = heart_disease.data.features.copy()
 print(X.head())
 y = heart_disease.data.targets.copy()
+y = (y > 0).astype(int)
 print(y.head())
 
 # Preprocessing
@@ -54,6 +57,15 @@ pipeline = Pipeline(steps=[
     ('classifier', LogisticRegression(max_iter=1000, random_state=42)) 
 ])
 
-pipeline.fit(X_train, y_train)
+pipeline.fit(X_train, np.ravel(y_train))
 
 y_pred = pipeline.predict(X_test)
+
+# Model Evaluation
+print("--- Model Evaluation ---")
+print(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}\n")
+
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
