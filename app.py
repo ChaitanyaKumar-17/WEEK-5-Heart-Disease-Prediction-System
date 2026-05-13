@@ -41,11 +41,6 @@ preprocessor = ColumnTransformer(
     remainder='passthrough'
 )
 
-# ---------------------------------------------------------
-# 5. Apply the Transformations
-# ---------------------------------------------------------
-# We fit AND transform on the training data...
-# X_train_processed = preprocessor.fit_transform(X_train)
-
-# # ...but we ONLY transform the test data (using the rules learned from training)
-# X_test_processed = preprocessor.transform(X_test)
+# Data transformation
+X_train_processed = preprocessor.fit_transform(X_train)
+X_test_processed = preprocessor.transform(X_test)
