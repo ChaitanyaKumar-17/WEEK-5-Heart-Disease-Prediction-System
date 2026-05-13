@@ -2,6 +2,8 @@ from ucimlrepo import fetch_ucirepo
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
   
 # fetch the Heart Disease dataset
 heart_disease = fetch_ucirepo(id=45) 
@@ -44,3 +46,14 @@ preprocessor = ColumnTransformer(
 # Data transformation
 X_train_processed = preprocessor.fit_transform(X_train)
 X_test_processed = preprocessor.transform(X_test)
+
+# Training and testing the model
+pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    # max_iter is increased to 1000 to ensure the math algorithm has time to converge
+    ('classifier', LogisticRegression(max_iter=1000, random_state=42)) 
+])
+
+pipeline.fit(X_train, y_train)
+
+y_pred = pipeline.predict(X_test)
